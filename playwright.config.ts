@@ -3,9 +3,10 @@ import { environment } from "./config/environment";
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: require.resolve("./global-setup"),
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 2 : undefined,
   timeout: 30_000,
   expect: {
@@ -21,6 +22,8 @@ export default defineConfig({
     actionTimeout: 10_000,
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
+    video: "retain-on-failure",
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {

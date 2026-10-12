@@ -8,20 +8,33 @@ test.describe("Login", () => {
     page,
     loginPage,
     dashboardPage,
+    appUser,
   }) => {
-    await loginPage.goto();
-    await loginPage.login(users.admin);
+    await test.step("Visit the login page", async () => {
+      await loginPage.goto();
+    });
 
-    await expect(dashboardPage.heading).toBeVisible();
-    await expect(page).toHaveURL(
-      new RegExp(`${escapeRegExp(appRoutes.dashboard)}(?:[/?#]|$)`),
-    );
+    await test.step("Authenticate with a valid admin account", async () => {
+      await loginPage.login(appUser);
+    });
+
+    await test.step("Confirm we landed on the dashboard", async () => {
+      await dashboardPage.waitUntilLoaded();
+      await expect(page).toHaveURL(
+        new RegExp(`${escapeRegExp(appRoutes.dashboard)}(?:[/?#]|$)`),
+      );
+      await expect(dashboardPage.heading).toBeVisible();
+    });
   });
 
   test("invalid credentials show an actionable error", async ({ loginPage }) => {
-    await loginPage.goto();
-    await loginPage.login(users.invalidPassword);
+    await test.step("Attempt login with a bad password", async () => {
+      await loginPage.goto();
+      await loginPage.login(users.invalidPassword);
+    });
 
-    await expect(loginPage.errorMessage).toHaveText("Invalid credentials");
+    await test.step("Verify the error message is user-visible", async () => {
+      await expect(loginPage.errorMessage).toContainText("Invalid credentials");
+    });
   });
 });

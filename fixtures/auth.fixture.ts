@@ -1,25 +1,31 @@
 import { test as base, type Page } from "@playwright/test";
+import { environment } from "../config/environment";
 import { DashboardPage } from "../pages/DashboardPage";
-import { LoginPage } from "../pages/LoginPage";
-import { users } from "../test-data/users";
+import { LoginPage, type LoginCredentials } from "../pages/LoginPage";
 
 type PageFixtures = {
+  appUser: LoginCredentials;
   loginPage: LoginPage;
   dashboardPage: DashboardPage;
   authenticatedPage: Page;
 };
 
 export const test = base.extend<PageFixtures>({
+  appUser: async ({}, use) => {
+    await use({
+      username: environment.auth.username,
+      password: environment.auth.password,
+    });
+  },
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
   },
   dashboardPage: async ({ page }, use) => {
     await use(new DashboardPage(page));
   },
-  // This fixture is opt-in, so login tests can exercise the unauthenticated flow.
-  authenticatedPage: async ({ page, loginPage, dashboardPage }, use) => {
+  authenticatedPage: async ({ page, loginPage, dashboardPage, appUser }, use) => {
     await loginPage.goto();
-    await loginPage.login(users.admin);
+    await loginPage.login(appUser);
     await dashboardPage.waitUntilLoaded();
     await use(page);
   },

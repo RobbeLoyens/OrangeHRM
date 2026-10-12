@@ -58,13 +58,14 @@ The default run executes the suite in Chromium, Firefox, and WebKit. Each test g
 
 ## Design choices
 
-- **Page Objects** keep locators and UI actions close to the page they represent. `BasePage` stays intentionally small; assertions about expected outcomes remain in tests.
-- **Fixtures** construct page objects per test and offer an opt-in `authenticatedPage` fixture for tests that need an existing session. Login tests use the same page-object fixtures without being pre-authenticated.
-- **Test data and environment configuration are separate.** Named user records make scenarios readable, while environment variables allow credentials and the target URL to be changed without editing test logic.
-- **Shared route constants and the regex helper** prevent repeated route strings and make dynamic URL assertions safe.
-- **Independent browser projects and parallel workers** exercise engine-specific behavior and shorten execution time. Tests should not rely on shared state to remain parallel-safe.
-- **HTML reporting and failure-only diagnostics** keep successful runs lightweight while retaining screenshots and traces when a test fails. Open a report with `npm run report`.
-- **Strict TypeScript** catches mistakes in page objects and fixtures before the test suite runs.
+- **Layered architecture** keeps environment configuration, page objects, fixtures, and tests separate. The config layer validates runtime inputs once, the page layer owns interaction logic, and specs remain focused on user outcomes.
+- **Typed page fixtures** construct page objects per test and expose reusable authentication state. The `authenticatedPage` fixture demonstrates the pattern without forcing all tests through a logged-in flow.
+- **Resilient selectors** prefer user-visible labels and roles over brittle CSS selectors. This reduces breakage when the UI markup changes without altering the user-facing experience.
+- **Centralized test data and route constants** keep scenarios readable and avoid duplicating raw strings across the suite. Route matching remains explicit and safe via the regex helper.
+- **Global auth bootstrap** creates a reusable storage state for the demo admin session and makes authenticated tests cheaper to scale. This avoids repeated browser login steps across the suite.
+- **Independent browser projects and parallel workers** exercise engine-specific behavior and keep execution efficient in CI. Tests avoid shared state and remain parallel-safe.
+- **HTML reporting and failure-only diagnostics** keep successful runs lightweight while retaining screenshots, traces, and video when a test fails. Open a report with `npm run report`.
+- **Strict TypeScript** catches mistakes in page objects, fixtures, and config before code reaches the browser runner.
 
 ## Extending the framework
 
