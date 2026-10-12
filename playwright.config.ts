@@ -3,7 +3,6 @@ import { environment } from "./config/environment";
 
 export default defineConfig({
   testDir: "./tests",
-  globalSetup: require.resolve("./global-setup"),
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 1,
