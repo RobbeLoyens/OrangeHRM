@@ -8,8 +8,8 @@ export interface LoginCredentials {
 }
 
 export class LoginPage extends BasePage {
-  readonly usernameInput = this.page.getByLabel(/username/i);
-  readonly passwordInput = this.page.getByLabel(/password/i);
+  readonly usernameInput = this.page.locator('input[name="username"]');
+  readonly passwordInput = this.page.locator('input[name="password"]');
   readonly loginButton = this.page.getByRole("button", { name: /login/i });
   readonly errorMessage = this.page.locator(".oxd-alert-content-text");
   readonly heading = this.page.getByRole("heading", { name: /login/i });

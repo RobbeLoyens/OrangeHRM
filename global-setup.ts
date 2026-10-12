@@ -12,9 +12,9 @@ export default async function globalSetup(_config: FullConfig): Promise<void> {
 
   try {
     await mkdir(dirname(storageStatePath), { recursive: true });
-    await page.goto(`${environment.baseURL}${appRoutes.login}`);
-    await page.getByLabel(/username/i).fill(environment.auth.username);
-    await page.getByLabel(/password/i).fill(environment.auth.password);
+    await page.goto(`${environment.baseURL}${appRoutes.login}`, { waitUntil: "networkidle" });
+    await page.locator('input[name="username"]').fill(environment.auth.username);
+    await page.locator('input[name="password"]').fill(environment.auth.password);
     await page.getByRole("button", { name: /login/i }).click();
     await page.waitForURL(/\/dashboard\/index(?:[/?#]|$)/, { timeout: 20_000 });
     await page.context().storageState({ path: storageStatePath });
