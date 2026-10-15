@@ -8,9 +8,11 @@ test.describe("Login", () => {
     page,
     loginPage,
     dashboardPage,
+    mainNavigationPage,
     appUser,
   }) => {
     await test.step("Visit the login page", async () => {
+      await mainNavigationPage.logoutIfAuthenticated();
       await loginPage.goto();
     });
 
@@ -27,8 +29,12 @@ test.describe("Login", () => {
     });
   });
 
-  test("invalid credentials show an actionable error", async ({ loginPage }) => {
+  test("invalid credentials show an actionable error", async ({
+    loginPage,
+    mainNavigationPage,
+  }) => {
     await test.step("Attempt login with a bad password", async () => {
+      await mainNavigationPage.logoutIfAuthenticated();
       await loginPage.goto();
       await loginPage.login(users.invalidPassword);
     });

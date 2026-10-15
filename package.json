@@ -5,6 +5,7 @@
   "description": "Portfolio-quality OrangeHRM UI automation framework using Playwright and TypeScript",
   "scripts": {
     "test": "playwright test",
+    "test:smoke": "playwright test tests/smoke.spec.ts --project=chromium --workers=2",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
