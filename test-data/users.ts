@@ -1,12 +1,13 @@
+import { environment } from "../config/environment";
 import type { LoginCredentials } from "../pages/LoginPage";
 
 export const users = {
   admin: {
-    username: process.env.ORANGEHRM_USERNAME ?? "Admin",
-    password: process.env.ORANGEHRM_PASSWORD ?? "admin123",
+    username: environment.auth.username,
+    password: environment.auth.password,
   },
   invalidPassword: {
-    username: process.env.ORANGEHRM_USERNAME ?? "Admin",
+    username: environment.auth.username,
     password: "incorrect-password",
   },
 } satisfies Record<string, LoginCredentials>;

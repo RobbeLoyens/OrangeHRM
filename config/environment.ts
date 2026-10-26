@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 const defaultBaseURL = "https://opensource-demo.orangehrmlive.com";
-const configuredBaseURL = process.env.BASE_URL?.trim() || defaultBaseURL;
 
 function validateBaseURL(value: string): string {
   let url: URL;
@@ -19,5 +18,10 @@ function validateBaseURL(value: string): string {
 }
 
 export const environment = Object.freeze({
-  baseURL: validateBaseURL(configuredBaseURL),
+  baseURL: validateBaseURL(process.env.BASE_URL?.trim() || defaultBaseURL),
+  isCI: Boolean(process.env.CI),
+  auth: Object.freeze({
+    username: process.env.ORANGEHRM_USERNAME?.trim() || "Admin",
+    password: process.env.ORANGEHRM_PASSWORD?.trim() || "admin123",
+  }),
 });
